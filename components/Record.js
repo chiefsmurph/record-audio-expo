@@ -307,6 +307,26 @@ export default class Record extends React.Component {
           <Text style={[styles.playbackTimestamp]}>
             {this._getPlaybackTimestamp()}
           </Text>
+          <View style={styles.playStopContainer}>
+            <TouchableHighlight
+              // underlayColor={BACKGROUND_COLOR}
+              style={styles.wrapper}
+              onPress={this._onPlayPausePressed}
+              disabled={!this.state.isPlaybackAllowed || this.state.isLoading}>
+              {/* <Image
+                style={styles.image}
+                source={this.state.isPlaying ? ICON_PAUSE_BUTTON.module : ICON_PLAY_BUTTON.module}
+              /> */}
+              <Text>{this.state.isPlaying ? 'PAUSE' : 'PLAY'}</Text>
+            </TouchableHighlight>
+            {/* <TouchableHighlight
+              // underlayColor={BACKGROUND_COLOR}
+              style={styles.wrapper}
+              onPress={this._onStopPressed}
+              disabled={!this.state.isPlaybackAllowed || this.state.isLoading}>
+              <Text>STOP</Text>
+            </TouchableHighlight> */}
+          </View>
         </View>
       </View>
     );
@@ -409,14 +429,14 @@ const styles = StyleSheet.create({
   //   alignSelf: 'stretch',
   //   paddingRight: 20,
   // },
-  // playStopContainer: {
-  //   flex: 1,
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   justifyContent: 'space-between',
-  //   minWidth: (ICON_PLAY_BUTTON.width + ICON_STOP_BUTTON.width) * 3.0 / 2.0,
-  //   maxWidth: (ICON_PLAY_BUTTON.width + ICON_STOP_BUTTON.width) * 3.0 / 2.0,
-  // },
+  playStopContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    // minWidth: (ICON_PLAY_BUTTON.width + ICON_STOP_BUTTON.width) * 3.0 / 2.0,
+    // maxWidth: (ICON_PLAY_BUTTON.width + ICON_STOP_BUTTON.width) * 3.0 / 2.0,
+  },
   // volumeContainer: {
   //   flex: 1,
   //   flexDirection: 'row',
