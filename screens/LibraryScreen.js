@@ -3,13 +3,14 @@ import { Text } from 'react-native';
 
 class ProfileScreen extends React.Component {
   static navigationOptions = {
-    title: 'Profile Page',
+    title: 'Your Library',
   };
   render() {
-    const {navigate} = this.props.navigation;
+    const navigation = this.props.navigation;
+    console.log({navigation});
     return (
       <Text>
-        Welcome to Jane's profile
+        Welcome to your library.
       </Text>
     );
   }

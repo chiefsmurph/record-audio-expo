@@ -1,12 +1,12 @@
 import HomeScreen from './screens/HomeScreen';
-import ProfileScreen from './screens/ProfileScreen';
+import LibraryScreen from './screens/LibraryScreen';
 
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
 const MainNavigator = createStackNavigator({
   Home: {screen: HomeScreen},
-  Profile: {screen: ProfileScreen},
+  Library: {screen: LibraryScreen},
 });
 
 const App = createAppContainer(MainNavigator);

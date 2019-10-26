@@ -3,14 +3,14 @@ import { Button } from 'react-native';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'Welcome',
+    title: 'Home',
   };
   render() {
     const {navigate} = this.props.navigation;
     return (
       <Button
-        title="Go to Jane's profile"
-        onPress={() => navigate('Profile', {name: 'Jane'})}
+        title="Go to your library"
+        onPress={() => navigate('Library')}
       />
     );
   }
