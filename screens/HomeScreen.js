@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from 'react-native';
+import Record from '../components/Record';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -8,10 +9,13 @@ class HomeScreen extends React.Component {
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <Button
-        title="Go to your library"
-        onPress={() => navigate('Library')}
-      />
+      <>
+        <Button
+          title="Go to your library"
+          onPress={() => navigate('Library')}
+        />
+        <Record/>
+      </>
     );
   }
 }
