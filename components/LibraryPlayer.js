@@ -1,40 +1,15 @@
 import React from 'react';
-import { Audio } from 'expo-av';
-import * as Permissions from 'expo-permissions';
-import * as FileSystem from 'expo-file-system';
 import {
-  Dimensions,
-  Image,
+  View,
   Slider,
-  StyleSheet,
   Text,
   TouchableHighlight,
-  View,
+  StyleSheet
 } from 'react-native';
+import { Audio } from 'expo-av';
 
-const recordingSettings = {
-  android: {
-    extension: '.m4a',
-    outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
-    audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
-    sampleRate: 44100,
-    numberOfChannels: 2,
-    bitRate: 128000,
-  },
-  ios: {
-    extension: '.m4a',
-    outputFormat: Audio.RECORDING_OPTION_IOS_OUTPUT_FORMAT_MPEG4AAC,
-    audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_MIN,
-    sampleRate: 44100,
-    numberOfChannels: 2,
-    bitRate: 128000,
-    linearPCMBitDepth: 16,
-    linearPCMIsBigEndian: false,
-    linearPCMIsFloat: false,
-  }
-};
+class LibraryPlayer extends React.Component {
 
-export default class Record extends React.Component {
   constructor(props) {
     super(props);
     this.recording = null;
@@ -42,6 +17,7 @@ export default class Record extends React.Component {
     this.isSeeking = false;
     this.shouldPlayAtEndOfSeek = false;
     this.state = {
+      playingAudio: null,
       haveRecordingPermissions: false,
       isLoading: false,
       isPlaybackAllowed: false,
@@ -62,17 +38,38 @@ export default class Record extends React.Component {
   }
 
   componentDidMount() {
-    this._askForPermissions();
+    this._loadAudioAndPlay();
   }
 
-  _askForPermissions = async () => {
-    const response = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-    this.setState({
-      haveRecordingPermissions: response.status === 'granted',
-    });
-  };
+  _loadAudioAndPlay = async () => {
+    const { playingFile } = this.props;
+    if (!playingFile) return console.log(`can't play null`);
+    console.log(`loading and playin ${playingFile}`);
+    this.sound = new Audio.Sound();
+    this.sound.setOnPlaybackStatusUpdate(this._updateScreenForSoundStatus);
+    try {
+      await this.sound.loadAsync(
+        { uri: `http://107.173.6.167:500/audio/${playingFile}` },
+        { shouldPlay: true }
+      );
+      await this.sound.playAsync();
+      // Your sound is playing!
+    } catch (error) {
+      console.error(error);
+      // An error occurred!
+    }
+  }
+  
+  _stopPlayer = async () => {
+    if (this.sound) {
+      await this.sound.unloadAsync();
+      this.sound.setOnPlaybackStatusUpdate(null);
+      this.sound = null;
+    }
+  }
 
   _updateScreenForSoundStatus = status => {
+    console.log('_updateScreenForSoundStatus', status);
     if (status.isLoaded) {
       this.setState({
         soundDuration: status.durationMillis,
@@ -85,6 +82,9 @@ export default class Record extends React.Component {
         shouldCorrectPitch: status.shouldCorrectPitch,
         isPlaybackAllowed: true,
       });
+      if (!status.isPlaying) {
+        this._stopPlayer();
+      }
     } else {
       this.setState({
         soundDuration: null,
@@ -306,17 +306,10 @@ export default class Record extends React.Component {
     }
     return `${this._getMMSSFromMillis(0)}`;
   }
+
   render() {
-    const { state } = this;
     return (
-      <View>
-        {/* <Text>Record some audio</Text> */}
-        {/* <Text>{JSON.stringify(state, null, 2)}</Text> */}
-        <TouchableHighlight
-          onPress={this._onRecordPressed}
-          disabled={this.state.isLoading}>
-          <Text>{this.state.isRecording ? 'Stop' : 'Start'} Recording</Text>
-        </TouchableHighlight>
+      <>
         <View style={styles.playbackContainer}>
           <Slider
             style={styles.playbackSlider}
@@ -351,10 +344,12 @@ export default class Record extends React.Component {
             </TouchableHighlight> */}
           </View>
         </View>
-      </View>
+      </>
     );
   }
 }
+export default LibraryPlayer;
+
 
 const styles = StyleSheet.create({
   // emptyContainer: {
@@ -412,12 +407,13 @@ const styles = StyleSheet.create({
   //   maxHeight: ICON_RECORDING.height,
   // },
   playbackContainer: {
-    // flex: 1,
-    // flexDirection: 'column',
-    // justifyContent: 'space-between',
-    // alignItems: 'center',
-    // alignSelf: 'stretch',
-    // minHeight: 100,
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    marginBottom: 30
+    // minHeight: ICON_THUMB_1.height * 2.0,
     // maxHeight: ICON_THUMB_1.height * 2.0,
   },
   playbackSlider: {
@@ -453,10 +449,11 @@ const styles = StyleSheet.create({
   //   paddingRight: 20,
   // },
   playStopContainer: {
-    // flex: 1,
-    // flexDirection: 'row',
-    // alignItems: 'center',
-    // justifyContent: 'space-between',
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingBottom: 100
     // minWidth: (ICON_PLAY_BUTTON.width + ICON_STOP_BUTTON.width) * 3.0 / 2.0,
     // maxWidth: (ICON_PLAY_BUTTON.width + ICON_STOP_BUTTON.width) * 3.0 / 2.0,
   },

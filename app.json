@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "My first app with Expo",
-    "slug": "AwesomeProject",
+    "name": "Recording audio and sharing it with others in real-time",
+    "slug": "RecordAudioExpo",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
