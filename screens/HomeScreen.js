@@ -4,9 +4,6 @@ import Record from '../components/Record';
 import Upload from '../components/Upload';
 
 class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Record some audio',
-  };
   state = {
     audioFile: null,
     recordKey: 0

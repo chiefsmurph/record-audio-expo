@@ -5,6 +5,7 @@ import LibraryScreen from './screens/LibraryScreen';
 
 import { StatusBar, View, Text, StyleSheet, SafeAreaView, Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
+import Icon from 'react-native-vector-icons/Ionicons';  
 import { createStackNavigator } from 'react-navigation-stack';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { observer, Provider } from 'mobx-react';
@@ -16,16 +17,6 @@ console.log(getStatusBarHeight());
 import ApplicationState from './mobx/ApplicationState';
 
 
-// const Root = styled.View`
-// flex: 1;
-// background-color: ${props => props.theme.BLACK};
-// `;
-
-// const StatusBarAndroid = styled.View`
-// height: 24;
-// background-color: ${props => props.theme.BLACK};
-// `;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -34,10 +25,6 @@ const styles = StyleSheet.create({
   }
 });
 
-// const styles = StyleSheet.create({
-//   paddingTop: 40,
-// });
-
 @observer
 class App extends React.Component {
   render() {
@@ -45,11 +32,8 @@ class App extends React.Component {
     return (
       <Provider ApplicationState={ApplicationState}>
         <View style={styles.container}>
-          <Text>Hello World</Text>
-          <AppContainer style={{ paddingTop: 20, backgroundColor: 'black' }} />
+          <AppContainer />
         </View>
-          {/* <Text>Hello</Text> */}
-          {/* <AppContainer style={{ paddingTop: 20, backgroundColor: 'black' }} /> */}
       </Provider>
       
     );
@@ -57,8 +41,28 @@ class App extends React.Component {
 }
 
 const MainScreenNavigator = createMaterialBottomTabNavigator({
-  Home: { screen: HomeScreen },
-  Library: { screen: LibraryScreen },
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {  
+      tabBarLabel: 'Record Audio',
+      tabBarIcon: ({ tintColor }) => (
+        <View>
+          <Icon style={[{color: tintColor}]} size={25} name={'md-recording'}/>  
+        </View>
+      ),
+    }
+  },
+  Library: {
+    screen: LibraryScreen,
+    navigationOptions: {  
+      tabBarLabel: 'Library',
+      tabBarIcon: ({ tintColor }) => (
+        <View>
+          <Icon style={[{color: tintColor}]} size={25} name={'md-list'}/>  
+        </View>
+      ),
+    }
+  },
 });
 
 // const App = createAppContainer(MainNavigator);
