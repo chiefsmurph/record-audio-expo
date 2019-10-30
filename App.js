@@ -1,28 +1,22 @@
 import React from 'react';
 import HomeScreen from './screens/HomeScreen';
 import LibraryScreen from './screens/LibraryScreen';
-import initSocket from './utils/init-socket';
+// import initSocket from './utils/init-socket';
 
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 // import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { observer, Provider } from 'mobx-react';
+import ApplicationState from './mobx/ApplicationState';
 
+@observer
 class App extends React.Component {
-  state = {
-    parentState: 'testiddsng testing',
-    socket: null,
-    recentUploads: []
-  }
-
-  componentDidMount() {
-    const socket = initSocket();
-    this.setState({ socket });
-  }
-
   render() {
     const AppContainer = createAppContainer(MainScreenNavigator);
     return (
-        <AppContainer screenProps={this.state} />
+        <Provider ApplicationState={ApplicationState}>
+          <AppContainer/>
+        </Provider>
     );
   }
 }

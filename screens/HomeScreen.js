@@ -11,10 +11,6 @@ class HomeScreen extends React.Component {
     audioFile: null,
     recordKey: 0
   }
-  componentDidMount() {
-    // console.log(this.props.screenProps);
-    
-  }
   render() {
     const { navigate } = this.props.navigation;
     const { audioFile, recordKey } = this.state;

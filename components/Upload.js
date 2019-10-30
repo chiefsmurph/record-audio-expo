@@ -35,8 +35,10 @@ export default class Upload extends React.Component {
     Alert.alert(
       'SUCCESS',
       'Audio uploaded successfully!',
+      [
+        { text: 'OK', onPress: () => this.props.onSuccess() }
+      ]
     );
-    this.props.onSuccess();
   };
   render() {
     const { uri } = this.props;

@@ -5,9 +5,11 @@ import {
   TouchableHighlight,
   Button
 } from 'react-native';
-
+import { observer, inject } from 'mobx-react';
 import LibraryPlayer from '../components/LibraryPlayer';
 
+@inject('ApplicationState')
+@observer
 class ProfileScreen extends React.Component {
   static navigationOptions = {
     title: 'Library',
@@ -17,13 +19,11 @@ class ProfileScreen extends React.Component {
     recentUploads: [],
   }
   componentDidMount() {
-    this.props.screenProps.socket.emit('client:request-recent-uploads');
-    this.props.screenProps.socket.on('server:recent-uploads', recentUploads => {
-      // setTimeout(() => {
-        console.log('recentUploads', recentUploads);
-        this.setState({ recentUploads });
-      // }, 3000);
-    });
+    const { socket } = this.props.ApplicationState;
+    socket.emit('client:request-recent-uploads');
+    socket.on('server:recent-uploads', recentUploads =>
+        this.setState({ recentUploads })
+    );
   }
   render() {
     console.log('welcome to library screen')
