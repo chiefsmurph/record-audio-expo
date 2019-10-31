@@ -11,6 +11,15 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const RecordIcon = (
+  <MaterialCommunityIcon 
+    // style={[{color: tintColor}]} 
+    size={25} 
+    name={'record-rec'}
+  />
+);  
 
 const recordingSettings = {
   android: {
@@ -160,7 +169,6 @@ export default class Record extends React.Component {
     const fileURI = this.recording.getURI();
     const info = await FileSystem.getInfoAsync(fileURI);
     console.log(`FILE INFO: ${JSON.stringify(info)}`);
-    this.props.onSetAudioFile(fileURI);
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
       interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
@@ -185,6 +193,7 @@ export default class Record extends React.Component {
     this.setState({
       isLoading: false,
     });
+    this.props.onSetAudioFile(fileURI);
   }
 
   _onRecordPressed = () => {
@@ -308,16 +317,28 @@ export default class Record extends React.Component {
   }
   render() {
     const { state } = this;
+    const recordText = this.state.isPlaybackAllowed 
+      ? 'Start Recording ' // 'Rerecord'
+      : (this.state.isRecording ? 'Stop' : 'Start') + ' Recording';
     return (
-      <View>
+      <View style={styles.container}>
         {/* <Text>Record some audio</Text> */}
         {/* <Text>{JSON.stringify(state, null, 2)}</Text> */}
-        <TouchableHighlight
-          onPress={this._onRecordPressed}
-          disabled={this.state.isLoading}>
-          <Text>{this.state.isRecording ? 'Stop' : 'Start'} Recording</Text>
-        </TouchableHighlight>
-        <View style={styles.playbackContainer}>
+        <View style={styles.recordContainer}>
+          <TouchableHighlight
+            onPress={this._onRecordPressed}
+            disabled={this.state.isLoading}>
+            <View style={styles.recordContainer}>
+              <MaterialCommunityIcon 
+                // style={[{color: tintColor}]} 
+                size={85} 
+                name={this.state.isRecording ? 'stop' : 'record-rec'}
+              />
+              <Text>{recordText}</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
+        <View style={[styles.playbackContainer, { opacity: this.state.isPlaybackAllowed ? 1 : 0 }]}>
           <Slider
             style={styles.playbackSlider}
             // trackImage={ICON_TRACK_1.module}
@@ -340,7 +361,7 @@ export default class Record extends React.Component {
                 style={styles.image}
                 source={this.state.isPlaying ? ICON_PAUSE_BUTTON.module : ICON_PLAY_BUTTON.module}
               /> */}
-              <Text>{this.state.isPlaying ? 'PAUSE' : 'PLAY'}</Text>
+              <Text style={{ padding: 20 }}>{this.state.isPlaying ? 'Pause' : 'Play'}</Text>
             </TouchableHighlight>
             {/* <TouchableHighlight
               // underlayColor={BACKGROUND_COLOR}
@@ -361,16 +382,27 @@ const styles = StyleSheet.create({
   //   alignSelf: 'stretch',
   //   backgroundColor: BACKGROUND_COLOR,
   // },
-  // container: {
-  //   flex: 1,
-  //   flexDirection: 'column',
-  //   justifyContent: 'space-between',
-  //   alignItems: 'center',
-  //   alignSelf: 'stretch',
-  //   backgroundColor: BACKGROUND_COLOR,
-  //   minHeight: DEVICE_HEIGHT,
-  //   maxHeight: DEVICE_HEIGHT,
-  // },
+  container: {
+
+    // borderRadius: 4,
+    // borderWidth: 3,
+    // borderColor: 'green',
+
+
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    // backgroundColor: BACKGROUND_COLOR,
+    // minHeight: DEVICE_HEIGHT,
+    // maxHeight: DEVICE_HEIGHT,
+  },
+  recordContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   // noPermissionsText: {
   //   textAlign: 'center',
   // },
@@ -412,10 +444,11 @@ const styles = StyleSheet.create({
   //   maxHeight: ICON_RECORDING.height,
   // },
   playbackContainer: {
-    // flex: 1,
-    // flexDirection: 'column',
-    // justifyContent: 'space-between',
-    // alignItems: 'center',
+    // borderRadius: 4,
+    // borderWidth: 3,
+    // borderColor: 'red',
+    alignSelf: 'stretch',
+    alignItems: 'center',
     // alignSelf: 'stretch',
     // minHeight: 100,
     // maxHeight: ICON_THUMB_1.height * 2.0,

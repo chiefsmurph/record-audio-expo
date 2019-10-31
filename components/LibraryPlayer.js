@@ -333,7 +333,7 @@ class LibraryPlayer extends React.Component {
                 style={styles.image}
                 source={this.state.isPlaying ? ICON_PAUSE_BUTTON.module : ICON_PLAY_BUTTON.module}
               /> */}
-              <Text>{this.state.isPlaying ? 'PAUSE' : 'PLAY'}</Text>
+              <Text>{this.state.isPlaying ? 'Pause' : 'Play'}</Text>
             </TouchableHighlight>
             {/* <TouchableHighlight
               // underlayColor={BACKGROUND_COLOR}

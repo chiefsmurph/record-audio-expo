@@ -2,8 +2,13 @@ import React from 'react';
 import {
   Text,
   TouchableHighlight,
-  Alert
+  Alert,
+  View,
+  StyleSheet
 } from 'react-native';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+
 const ENDPOINT = 'http://107.173.6.167:500/upload';
 
 export default class Upload extends React.Component {
@@ -43,12 +48,42 @@ export default class Upload extends React.Component {
   render() {
     const { uri } = this.props;
     return (
-      <>
-        <Text>{uri}</Text>
+      <View style={styles.container}>
+        {/* <Text>{uri}</Text> */}
         <TouchableHighlight onPress={this._uploadFile}>
-          <Text>Upload!</Text>
+          <View style={styles.container}>
+            <MaterialCommunityIcon
+              size={85} 
+              name={'upload'}
+            />
+            <Text>Upload!</Text>
+          </View>
         </TouchableHighlight>
-      </>
+      </View>
     )
   }
 }
+
+
+const styles = StyleSheet.create({
+  // emptyContainer: {
+  //   alignSelf: 'stretch',
+  //   backgroundColor: BACKGROUND_COLOR,
+  // },
+  container: {
+
+    // borderRadius: 4,
+    // borderWidth: 3,
+    // borderColor: 'green',
+
+
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    // backgroundColor: BACKGROUND_COLOR,
+    // minHeight: DEVICE_HEIGHT,
+    // maxHeight: DEVICE_HEIGHT,
+  }
+});

@@ -5,7 +5,7 @@ import LibraryScreen from './screens/LibraryScreen';
 
 import { StatusBar, View, Text, StyleSheet, SafeAreaView, Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
-import Icon from 'react-native-vector-icons/Ionicons';  
+import Icon from 'react-native-vector-icons/Ionicons';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { observer, Provider } from 'mobx-react';
