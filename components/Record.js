@@ -197,6 +197,7 @@ export default class Record extends React.Component {
   }
 
   _onRecordPressed = () => {
+    this.props.onSetAudioFile(null);
     if (this.state.isRecording) {
       this._stopRecordingAndEnablePlayback();
     } else {

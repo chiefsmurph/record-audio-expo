@@ -1,36 +1,38 @@
 import React from 'react';
-import { Button, View, StyleSheet } from 'react-native';
+import { Button, View, StyleSheet, Text } from 'react-native';
 import Record from '../components/Record';
 import Upload from '../components/Upload';
 
 class HomeScreen extends React.Component {
   state = {
     audioFile: null,
-    recordKey: 0
+    recordKey: 0,
+    uploading: false
   }
   render() {
     const { navigate } = this.props.navigation;
-    const { audioFile, recordKey } = this.state;
+    const { audioFile, recordKey, uploading } = this.state;
     return (
       <View style={styles.homeContainer}>
-        {/* <Button
-          title="Go to the library"
-          onPress={() => navigate('Library')}
-        /> */}
-        <Record 
-          onSetAudioFile={audioFile => this.setState({ audioFile })} 
-          key={recordKey} 
-        />
+        { !uploading && (
+          <Record 
+            onSetAudioFile={audioFile => this.setState({ audioFile })} 
+            key={recordKey} 
+          />
+        )}
         <View style={{ flex: 1, opacity: audioFile ? 1 : 0 }}>
           <Upload 
             uri={audioFile} 
+            setUploading={uploading => this.setState({ uploading })}
             onSuccess={() => {
               this.setState(({ recordKey }) => ({
                 audioFile: null,
-                recordKey: recordKey + 1
+                recordKey: recordKey + 1,
+                uploading: false
               }));
               navigate('Library')
             }}
+            key={recordKey} 
           />
         </View>
       </View>
@@ -41,9 +43,9 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   homeContainer: {
-    borderRadius: 4,
-    borderWidth: 3,
-    borderColor: 'orange',
+    // borderRadius: 4,
+    // borderWidth: 3,
+    // borderColor: 'orange',
     flex: 1,
 
 

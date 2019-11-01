@@ -41,6 +41,11 @@ class LibraryPlayer extends React.Component {
     this._loadAudioAndPlay();
   }
 
+  componentWillUnmount() {
+    console.log('unmounting');
+    this._stopPlayer();
+  }
+
   _loadAudioAndPlay = async () => {
     const { playingFile } = this.props;
     if (!playingFile) return console.log(`can't play null`);

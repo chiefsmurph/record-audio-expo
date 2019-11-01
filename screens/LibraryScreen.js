@@ -21,9 +21,10 @@ class ProfileScreen extends React.Component {
   componentDidMount() {
     const { socket } = this.props.ApplicationState;
     socket.emit('client:request-recent-uploads');
-    socket.on('server:recent-uploads', recentUploads =>
-        this.setState({ recentUploads })
-    );
+    socket.on('server:recent-uploads', recentUploads => {
+        this.setState({ recentUploads });
+        console.log(JSON.stringify(recentUploads, null, 2));
+    });
   }
   render() {
     console.log('welcome to library screen')
@@ -36,12 +37,13 @@ class ProfileScreen extends React.Component {
           data={recentUploads.slice(0, 10)}
           renderItem={({ item }) => (
             <Button
-              title={item}
+              title={item.slice(0, item.lastIndexOf('.'))}
               onPress={() => this.setState({ playingFile: item })}
               />
           )}
         />
-        <LibraryPlayer playingFile={playingFile} key={playingFile} />
+        <LibraryPlayer playingFile={playingFile} key={Date.now()} />
+        <Text>{playingFile}</Text>
       </>
     );
   }
