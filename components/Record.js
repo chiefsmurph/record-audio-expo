@@ -74,6 +74,11 @@ export default class Record extends React.Component {
     this._askForPermissions();
   }
 
+  componentWillUnmount() {
+    // console.log('unmounting record');
+    this._onStopPressed();
+  }
+
   _askForPermissions = async () => {
     const response = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
     this.setState({

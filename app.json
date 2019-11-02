@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Recording audio and sharing it with others in real-time",
-    "slug": "RecordAudioExpo",
+    "name": "recordaudioexpo",
+    "slug": "recordaudioexpo",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
@@ -25,6 +25,7 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "Recording audio and sharing it with others in real-time"
   }
 }

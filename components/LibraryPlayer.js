@@ -42,7 +42,7 @@ class LibraryPlayer extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log('unmounting');
+    // console.log('unmounting');
     this._stopPlayer();
   }
 
@@ -74,7 +74,7 @@ class LibraryPlayer extends React.Component {
   }
 
   _updateScreenForSoundStatus = status => {
-    console.log('_updateScreenForSoundStatus', status);
+    // console.log('_updateScreenForSoundStatus', status);
     if (status.isLoaded) {
       this.setState({
         soundDuration: status.durationMillis,
@@ -87,9 +87,6 @@ class LibraryPlayer extends React.Component {
         shouldCorrectPitch: status.shouldCorrectPitch,
         isPlaybackAllowed: true,
       });
-      if (!status.isPlaying) {
-        this._stopPlayer();
-      }
     } else {
       this.setState({
         soundDuration: null,
@@ -200,12 +197,15 @@ class LibraryPlayer extends React.Component {
     }
   };
 
-  _onPlayPausePressed = () => {
+  _onPlayPausePressed = async () => {
     if (this.sound != null) {
       if (this.state.isPlaying) {
         this.sound.pauseAsync();
       } else {
-        this.sound.playAsync();
+        if (this.state.soundPosition === this.state.soundDuration) {
+          await this.sound.setPositionAsync(0);
+        }
+        setTimeout(() => this.sound.playAsync(), 200);
       }
     }
   };
