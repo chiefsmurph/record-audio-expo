@@ -5,6 +5,8 @@ class ApplicationStateStore {
 
   @observable socket = initSocket();
 
+  @observable loggedIn = true;
+
   // @observable list = [
   //   { title: 'Go to the School', isFinished: true },
   //   { title: 'Prepare tasks for today', isFinished: false },

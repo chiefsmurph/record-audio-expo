@@ -333,12 +333,14 @@ class LibraryPlayer extends React.Component {
               // underlayColor={BACKGROUND_COLOR}
               style={styles.wrapper}
               onPress={this._onPlayPausePressed}
-              disabled={!this.state.isPlaybackAllowed || this.state.isLoading}>
+              disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
+              hitSlop={{top: 20, left: 20, bottom: 20, right: 20}}
+            >
               {/* <Image
                 style={styles.image}
                 source={this.state.isPlaying ? ICON_PAUSE_BUTTON.module : ICON_PLAY_BUTTON.module}
               /> */}
-              <Text>{this.state.isPlaying ? 'Pause' : 'Play'}</Text>
+              <Text style={{ paddingVertical: 5, paddingHorizontal: 30}}>{this.state.isPlaying ? 'Pause' : 'Play'}</Text>
             </TouchableHighlight>
             {/* <TouchableHighlight
               // underlayColor={BACKGROUND_COLOR}

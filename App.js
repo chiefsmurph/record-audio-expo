@@ -1,10 +1,13 @@
 import React from 'react';
 import HomeScreen from './screens/HomeScreen';
 import LibraryScreen from './screens/LibraryScreen';
+import WelcomeScreen from './screens/WelcomeScreen';
+import CreateAccountScreen from './screens/CreateAccountScreen';
+import SignInScreen from './screens/SignInScreen';
 // import initSocket from './utils/init-socket';
 
 import { StatusBar, View, Text, StyleSheet, SafeAreaView, Platform } from 'react-native';
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
@@ -28,7 +31,7 @@ const styles = StyleSheet.create({
 @observer
 class App extends React.Component {
   render() {
-    const AppContainer = createAppContainer(MainScreenNavigator);
+    const AppContainer = createAppContainer(MainSwitchNavigator);
     return (
       <Provider ApplicationState={ApplicationState}>
         <View style={styles.container}>
@@ -40,7 +43,15 @@ class App extends React.Component {
   }
 }
 
-const MainScreenNavigator = createMaterialBottomTabNavigator({
+
+const AuthStack = createSwitchNavigator({
+  Welcome: WelcomeScreen,
+  CreateAccount: CreateAccountScreen,
+  SignIn: SignInScreen
+});
+
+
+const AppStack = createMaterialBottomTabNavigator({
   Home: {
     screen: HomeScreen,
     navigationOptions: {  
@@ -64,6 +75,15 @@ const MainScreenNavigator = createMaterialBottomTabNavigator({
     }
   },
 });
+
+
+const MainSwitchNavigator = createSwitchNavigator({
+  Auth: AuthStack,
+  App: AppStack,
+});
+
+
+
 
 // const App = createAppContainer(MainNavigator);
 
