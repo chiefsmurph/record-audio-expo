@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, View, StyleSheet, Text, Alert, ActivityIndicator } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { observer, inject } from 'mobx-react';
 
 const Space = ({ children, margin = 8 }) => (
   <View style={{ marginVertical: margin }}>
@@ -8,6 +9,8 @@ const Space = ({ children, margin = 8 }) => (
   </View>
 );
 
+@inject('ApplicationState')
+@observer
 class SignInScreen extends React.Component {
   state = {
     username: '',
@@ -20,13 +23,28 @@ class SignInScreen extends React.Component {
     console.log({ passed })
     return passed;
   }
+  _signIn = ({ username, password }) => {
+    const { socket } = this.props.ApplicationState;
+    return new Promise(resolve => {
+      console.log(socket)
+      socket.emit('client:login', {
+        username,
+        password
+      }, response => {
+        console.log({
+          response
+        });
+        resolve(response);
+      });
+    });
+  }
   _submit = async () => {
     console.log(this.state.username, this.state.password);
     const { username, password } = this.state;
     this.setState({
       inProgress: true
     })
-    const success = await this._fakeFetch({
+    const { success, authToken } = await this._signIn({
       username,
       password
     });
@@ -34,9 +52,20 @@ class SignInScreen extends React.Component {
       inProgress: false
     });
     if (success) {
+      
+      this.props.ApplicationState.user = {
+        username,
+        authToken
+      };
       Alert.alert(
         'SUCCESS',
-        `Login successful!  Welcome, ${username}.`,
+        `Login successful!  Welcome, ${username}. ${authToken}`,
+        [
+          { 
+            text: 'OK', 
+            onPress: () => this.props.navigation.navigate('App')
+          }
+        ]
       );
     } else {
       Alert.alert(

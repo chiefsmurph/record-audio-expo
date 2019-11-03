@@ -1,21 +1,11 @@
-import { observable, action } from 'mobx';
-import { create, persist } from 'mobx-persist';
-import { AsyncStorage } from 'react-native';
-
+import { observable, action } from 'mobx'
 import initSocket from '../utils/init-socket';
 
 class ApplicationStateStore {
 
-  @observable hasInit = false;
   @observable socket = initSocket();
 
   @observable loggedIn = false;
-
-  @persist('object') @observable user = {
-    username: null,
-    authToken: null,
-    // authToken: '983ce597f9f3460c'
-  }
 
   // @observable list = [
   //   { title: 'Go to the School', isFinished: true },
@@ -40,13 +30,4 @@ class ApplicationStateStore {
 
 const store = new ApplicationStateStore();
 console.log({ store });
-
-const hydrate = create({
-  storage: AsyncStorage,
-  jsonify: true
-})
-hydrate('Applicationstate', store).then(() => {
-  console.log(store.user);
-  console.log('Applicationstate has been hydrated')
-});
 export default store;

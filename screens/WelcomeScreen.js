@@ -1,17 +1,103 @@
 import React from 'react';
-import { Button, View, StyleSheet, Text } from 'react-native';
+import { Button, View, StyleSheet, Text, Alert, ActivityIndicator } from 'react-native';
 import { observer, inject } from 'mobx-react';
+// import Icon from 'react-native-vector-icons/Foundation';
+import { Foundation, FontAwesome } from '@expo/vector-icons';
+import * as Font from 'expo-font';
+
+const wait = (ms = 1400) => new Promise(resolve => setTimeout(resolve, ms));
 
 @inject('ApplicationState')
 @observer
 class WelcomeScreen extends React.Component {
-  componentDidMount() {
-    if (this.props.ApplicationState.loggedIn) {
-      this.props.navigation.navigate('App');
+  state = {
+    loadingStatus: null,
+    loginSuccess: null
+  }
+  _preloadSuccessIcon = () => {
+    return Font.loadAsync(FontAwesome.font);
+  }
+  async componentDidMount() {
+    const { hasInit } = this.props.ApplicationState;
+    if (!hasInit) {
+      this.setState({
+        loadingStatus: 'Initializing'
+      });
+      await wait();
+      await this._preloadSuccessIcon();
+      this.props.ApplicationState.hasInit = true;
     }
+    const { user: { username, authToken }} = this.props.ApplicationState;
+    if (username && authToken) {
+      this.setState({
+        loadingStatus: 'Logging you back in'
+      })
+      const { success } = await this._authToken({
+        username,
+        authToken
+      });
+      await wait();
+      if (success) {
+        this.setState({
+          loginSuccess: true,
+          loadingStatus: `Welcome back, ${username}`
+        });
+        await wait();
+        this.props.navigation.navigate('App')
+      } else {
+        Alert.alert(
+          'FAILURE',
+          'There is an issue with your auth token.  Clear your cache and login again.'
+        );
+      }
+    }
+    this.setState({
+      loadingStatus: null
+    })
+  }
+  _authToken = async ({ username, authToken }) => {
+    const { socket } = this.props.ApplicationState;
+    return new Promise(resolve => {
+      console.log(socket)
+      socket.emit('client:auth-token', {
+        username,
+        authToken
+      }, response => {
+        console.log({
+          response
+        });
+        resolve(response);
+      })
+    });
   }
   render() {
     console.log(this.props.navigation);
+    const { loadingStatus, loginSuccess } = this.state;
+    if (loadingStatus) {
+      return (
+        <View style={[styles.container, { justifyContent: 'center' }]}>
+          {
+            loginSuccess
+              ? (
+                <Foundation color={'green'} size={95} name={'check'}/> 
+              )
+              : (
+              <ActivityIndicator 
+                size="large" 
+                color="#0000ff"
+                style={[
+                  {
+                    transform: [{ scale: 2 }],
+                    marginBottom: 30
+                  }
+                ]} />
+              )
+          }
+          
+          <Text style={{ fontSize: 23 }}>{loadingStatus}...</Text>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <Text style={{ fontSize: 28 }}>Welcome to record-audio-expo</Text>

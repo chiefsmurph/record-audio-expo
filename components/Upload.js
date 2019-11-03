@@ -12,7 +12,7 @@ import {
   Keyboard
 } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { observer, inject } from 'mobx-react';
 
 const ENDPOINT = 'http://107.173.6.167:500/upload';
 
@@ -48,7 +48,8 @@ class TypeNameModal extends React.Component {
   }
 };
 
-
+@inject('ApplicationState')
+@observer
 export default class Upload extends React.Component {
   state = {
     showingModal: false,
@@ -86,9 +87,11 @@ export default class Upload extends React.Component {
 
     let formData = new FormData();
 
+    const { username } = this.props.ApplicationState.user;
+    const name = `${username} - ${this.state.name}.${fileType}`
     formData.append("audioFile", {
       uri,
-      name: `${this.state.name}.${fileType}`,
+      name,
       type: `audio/${fileType}`
     });
 

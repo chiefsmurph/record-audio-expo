@@ -1,5 +1,6 @@
 import React from 'react';
 import HomeScreen from './screens/HomeScreen';
+import ProfileScreen from './screens/ProfileScreen';
 import LibraryScreen from './screens/LibraryScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import CreateAccountScreen from './screens/CreateAccountScreen';
@@ -9,6 +10,7 @@ import SignInScreen from './screens/SignInScreen';
 import { StatusBar, View, Text, StyleSheet, SafeAreaView, Platform } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { observer, Provider } from 'mobx-react';
@@ -52,6 +54,17 @@ const AuthStack = createSwitchNavigator({
 
 
 const AppStack = createMaterialBottomTabNavigator({
+  Profile: {
+    screen: ProfileScreen,
+    navigationOptions: {  
+      tabBarLabel: 'Profile',
+      tabBarIcon: ({ tintColor }) => (
+        <View>
+          <Material style={[{color: tintColor}]} size={25} name={'face'}/>  
+        </View>
+      ),
+    }
+  },
   Home: {
     screen: HomeScreen,
     navigationOptions: {  
@@ -74,7 +87,7 @@ const AppStack = createMaterialBottomTabNavigator({
       ),
     }
   },
-});
+}, { initialRouteName: 'Home' });
 
 
 const MainSwitchNavigator = createSwitchNavigator({
