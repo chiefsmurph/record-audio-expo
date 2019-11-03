@@ -11,11 +11,11 @@ class WelcomeScreen extends React.Component {
     }
   }
   render() {
-    console.log(this.props.navigation)
+    console.log(this.props.navigation);
     return (
       <View style={styles.container}>
         <Text style={{ fontSize: 28 }}>Welcome to record-audio-expo</Text>
-        <Button title={'Sign In'} onPress={() => { this.props.navigation.navigate('SignIn'); console.log('signin')}} />
+        <Button title={'Sign In'} onPress={() => this.props.navigation.navigate('SignIn')} />
         <Button title={'Create Account'} onPress={() => this.props.navigation.navigate('CreateAccount')} />
       </View>
       

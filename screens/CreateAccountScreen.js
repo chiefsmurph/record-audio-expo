@@ -1,8 +1,6 @@
 import React from 'react';
-import { Button, View, StyleSheet, Text } from 'react-native';
+import { Button, View, StyleSheet, Text, Alert, ActivityIndicator } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import Record from '../components/Record';
-import Upload from '../components/Upload';
 
 const Space = ({ children, margin = 8 }) => (
   <View style={{ marginVertical: margin }}>
@@ -11,6 +9,42 @@ const Space = ({ children, margin = 8 }) => (
 );
 
 class CreateAccountScreen extends React.Component {
+  state = {
+    username: '',
+    password: ''
+  };
+  _fakeFetch = async ({ username, password }) => {
+    console.log({ username, password })
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    const passed = Math.random() > 0.5;
+    console.log({ passed })
+    return passed;
+  }
+  _submit = async () => {
+    console.log(this.state.username, this.state.password);
+    const { username, password } = this.state;
+    this.setState({
+      inProgress: true
+    })
+    const success = await this._fakeFetch({
+      username,
+      password
+    });
+    this.setState({
+      inProgress: false
+    });
+    if (success) {
+      Alert.alert(
+        'SUCCESS',
+        `Login successful!  Welcome, ${username}.`,
+      );
+    } else {
+      Alert.alert(
+        'FAILURE',
+        'Login failed',
+      );
+    }
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -34,6 +68,8 @@ class CreateAccountScreen extends React.Component {
             style={{ height: 20, borderColor: 'gray', borderWidth: 1, paddingVertical: 5 }} 
             textContentType={'username'}
             autoCapitalize={'none'}
+            value={this.state.username}
+            onChangeText={username => this.setState({ username })}
           />
         </Space>
         <Space>
@@ -42,10 +78,25 @@ class CreateAccountScreen extends React.Component {
             style={{ height: 20, borderColor: 'gray', borderWidth: 1, paddingVertical: 5 }} 
             textContentType={'password'}
             secureTextEntry={true}
+            value={this.state.password}
+            onChangeText={password => this.setState({ password })}
           />
         </Space>
         <Space>
-          <Button title='Submit' />
+          {
+            this.state.inProgress
+              ? <ActivityIndicator 
+                  size="large" 
+                  color="#0000ff"
+                  style={[
+                    {
+                      transform: [{ scale: 2 }],
+                      marginVertical: 30
+                    }
+                  ]} />
+              : <Button title='Submit' onPress={this._submit} />
+          }
+          
         </Space>
       </View>
     )

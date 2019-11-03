@@ -29,9 +29,7 @@ class TypeNameModal extends React.Component {
         animationType="slide"
         transparent={false}
         visible={visible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
+      >
         <View style={{ margin: 60, padding: 20 }}>
           <Text style={{ fontSize: 20 }}>Type a name for your recording...</Text>
           <TextInput
