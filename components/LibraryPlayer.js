@@ -57,7 +57,7 @@ class LibraryPlayer extends React.Component {
     this.sound.setOnPlaybackStatusUpdate(this._updateScreenForSoundStatus);
     try {
       await this.sound.loadAsync(
-        { uri: `http://107.173.6.167:500/audio/${playingFile}` },
+        { uri: `http://89376b9f.ngrok.io/audio/${playingFile}` },
         { shouldPlay: true }
       );
       await this.sound.playAsync();

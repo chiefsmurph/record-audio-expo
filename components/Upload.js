@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   Alert,
   View,
   StyleSheet,
@@ -9,21 +10,25 @@ import {
   TextInput,
   Button,
   ActivityIndicator,
-  Keyboard
+  Keyboard,
+  Switch
 } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { observer, inject } from 'mobx-react';
+import Autocomplete from 'react-native-autocomplete-input';
 
-const ENDPOINT = 'http://107.173.6.167:500/upload';
+
+const ENDPOINT = 'http://89376b9f.ngrok.io/upload';
 
 
 
 class TypeNameModal extends React.Component {
   state = {
-    text: ''
+    text: '',
+    query: 'apple'
   }
   render() {
-    const { visible, setName } = this.props;
+    const { visible, setName, onCancel } = this.props;
     return (
       <Modal
         animationType="slide"
@@ -38,9 +43,35 @@ class TypeNameModal extends React.Component {
             value={this.state.text}
             autoFocus={true}
           />
+          <Text>Public recording?</Text>
+          <Switch
+            onValueChange={() => {}}
+            value={true}
+            onTintColor={'orange'}
+            tintColor={'grey'}
+          />
+
+          <Autocomplete
+            data={['apple', 'pie', 'couch']}
+            // defaultValue={'apple'}
+            onChangeText={text => this.setState({ query: text })}
+            renderItem={({ item, i }) => (
+              <TouchableOpacity onPress={() => this.setState({ query: item })}>
+                <Text>{item}</Text>
+              </TouchableOpacity>
+            )}
+          />
+              
           <Button
             title={'Complete Upload'}
             onPress={() => setName(this.state.text)}
+          />
+          
+          <Button
+            style={{ marginTop: 20 }}
+            color={'red'}
+            title={'Cancel'}
+            onPress={onCancel}  
           />
         </View>
       </Modal>
@@ -87,13 +118,18 @@ export default class Upload extends React.Component {
 
     let formData = new FormData();
 
-    const { username } = this.props.ApplicationState.user;
+    const { username, authToken } = this.props.ApplicationState.user;
     const name = `${username} - ${this.state.name}.${fileType}`
     formData.append("audioFile", {
       uri,
       name,
       type: `audio/${fileType}`
     });
+
+    formData.append("name", this.state.name);
+    formData.append("fileType", fileType);
+    formData.append("username", username);
+    formData.append("authToken", authToken);
 
     let options = {
       method: "POST",
@@ -160,7 +196,11 @@ export default class Upload extends React.Component {
         }
         <TypeNameModal 
           visible={showingModal}
-          setName={this._onSetName} />
+          setName={this._onSetName} 
+          onCancel={() => {
+            Keyboard.dismiss();
+            setTimeout(() => this.setState({ showingModal: false }), 200);
+          }} />
       </View>
     )
   }

@@ -34,8 +34,12 @@ class ProfileScreen extends React.Component {
   render() {
     console.log('welcome to library screen')
     const navigation = this.props.navigation;
-    const { playingFile, recentUploads, clickCount } = this.state;
-    // console.log(this.props.screenProps)
+    let { playingFile, recentUploads, clickCount } = this.state;
+    recentUploads = recentUploads.map(upload => ({
+      ...upload,
+      displayText: upload.user.username + ' - ' + upload.name
+    }));
+    console.log({recentUploads})
     return (
       <>
         <Text style={{ fontSize: 28, marginHorizontal: 20, marginTop: 20, marginBottom: 10 }}>Public Feed</Text>
@@ -50,7 +54,7 @@ class ProfileScreen extends React.Component {
           data={recentUploads.slice(0, 50)}
           renderItem={({ item }) => (
             <Button
-              title={item.slice(0, item.lastIndexOf('.'))}
+              title={item.displayText}
               onPress={() => this.setState({ playingFile: item, clickCount: clickCount + 1 })}
               />
           )}
@@ -58,8 +62,8 @@ class ProfileScreen extends React.Component {
         {
           playingFile && (
             <View style={{ paddingVertical: 15 }}>
-              <Text style={{ paddingHorizontal: 10 }}>{playingFile}</Text>
-              <LibraryPlayer playingFile={playingFile} key={playingFile + clickCount} />
+              <Text style={{ paddingHorizontal: 10 }}>{playingFile.displayText}</Text>
+              <LibraryPlayer playingFile={playingFile.fileName} key={playingFile + clickCount} />
             </View>
           )
         }
