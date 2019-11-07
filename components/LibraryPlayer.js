@@ -4,9 +4,12 @@ import {
   Slider,
   Text,
   TouchableHighlight,
-  StyleSheet
+  StyleSheet,
+  Dimensions
 } from 'react-native';
 import { Audio } from 'expo-av';
+
+var {height, width} = Dimensions.get('window');
 
 class LibraryPlayer extends React.Component {
 
@@ -325,13 +328,10 @@ class LibraryPlayer extends React.Component {
             onSlidingComplete={this._onSeekSliderSlidingComplete}
             disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
           />
-          <Text style={[styles.playbackTimestamp]}>
-            {this._getPlaybackTimestamp()}
-          </Text>
-          <View style={styles.playStopContainer}>
+          <View style={styles.below}>
             <TouchableHighlight
               // underlayColor={BACKGROUND_COLOR}
-              style={styles.wrapper}
+              // style={styles.wrapper}
               onPress={this._onPlayPausePressed}
               disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
               hitSlop={{top: 20, left: 20, bottom: 20, right: 20}}
@@ -342,6 +342,9 @@ class LibraryPlayer extends React.Component {
               /> */}
               <Text style={{ paddingVertical: 5, paddingHorizontal: 30}}>{this.state.isPlaying ? 'Pause' : 'Play'}</Text>
             </TouchableHighlight>
+            <Text style={[styles.playbackTimestamp]}>
+              {this._getPlaybackTimestamp()}
+            </Text>
             {/* <TouchableHighlight
               // underlayColor={BACKGROUND_COLOR}
               style={styles.wrapper}
@@ -419,9 +422,30 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     alignSelf: 'stretch',
-    marginBottom: 30
+
+
+
+    // borderRadius: 4,
+    // borderWidth: 3,
+    // borderColor: 'orange',
+
+    minHeight: 70,
+    marginBottom: 50
     // minHeight: ICON_THUMB_1.height * 2.0,
     // maxHeight: ICON_THUMB_1.height * 2.0,
+  },
+  below: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+
+
+
+    // borderRadius: 4,
+    // borderWidth: 3,
+    // borderColor: 'orange',
   },
   playbackSlider: {
     alignSelf: 'stretch',
@@ -433,9 +457,9 @@ const styles = StyleSheet.create({
   //   paddingLeft: 20,
   // },
   playbackTimestamp: {
-    textAlign: 'right',
-    alignSelf: 'stretch',
-    paddingRight: 20,
+    // textAlign: 'right',
+    // alignSelf: 'stretch',
+    paddingRight: 8,
   },
   // image: {
   //   backgroundColor: BACKGROUND_COLOR,
@@ -460,7 +484,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 100
+    paddingBottom: 100,
+
+    borderRadius: 4,
+    borderWidth: 3,
+    borderColor: 'green',
+
+    maxWidth: width,
     // minWidth: (ICON_PLAY_BUTTON.width + ICON_STOP_BUTTON.width) * 3.0 / 2.0,
     // maxWidth: (ICON_PLAY_BUTTON.width + ICON_STOP_BUTTON.width) * 3.0 / 2.0,
   },

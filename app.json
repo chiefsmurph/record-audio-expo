@@ -24,7 +24,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.johnmurphydevelopment.recordaudioexpo"
+    },
+    "android": {
+      "package": "com.johnmurphydevelopment.recordaudioexpo"
     },
     "description": "Recording audio and sharing it with others in real-time"
   }

@@ -3,7 +3,8 @@ import {
   FlatList,
   Text,
   TouchableHighlight,
-  Button
+  Button,
+  View
 } from 'react-native';
 import { observer, inject } from 'mobx-react';
 import LibraryPlayer from '../components/LibraryPlayer';
@@ -37,8 +38,16 @@ class ProfileScreen extends React.Component {
     // console.log(this.props.screenProps)
     return (
       <>
+        <Text style={{ fontSize: 28, margin: 5 }}>Public Feed</Text>
+        {/* <View
+          style={{
+            marginVertical: 4,
+            borderBottomColor: 'black',
+            borderBottomWidth: 1,
+          }}
+        /> */}
         <FlatList
-          data={recentUploads.slice(0, 10)}
+          data={recentUploads.slice(0, 50)}
           renderItem={({ item }) => (
             <Button
               title={item.slice(0, item.lastIndexOf('.'))}
@@ -46,8 +55,14 @@ class ProfileScreen extends React.Component {
               />
           )}
         />
-        <LibraryPlayer playingFile={playingFile} key={playingFile + clickCount} />
-        <Text>{playingFile}</Text>
+        {
+          playingFile && (
+            <View style={{ paddingVertical: 10 }}>
+              <Text style={{ paddingHorizontal: 10 }}>{playingFile}</Text>
+              <LibraryPlayer playingFile={playingFile} key={playingFile + clickCount} />
+            </View>
+          )
+        }
       </>
     );
   }

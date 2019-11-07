@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   }
 });
 
@@ -37,7 +37,7 @@ class App extends React.Component {
     return (
       <Provider ApplicationState={ApplicationState}>
         <View style={styles.container}>
-          <AppContainer />
+          <AppContainer/>
         </View>
       </Provider>
       
