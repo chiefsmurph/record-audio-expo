@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     alignSelf: 'stretch',
-
+    paddingBottom: 7,
 
 
     // borderRadius: 4,
@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
     // borderColor: 'orange',
 
     minHeight: 70,
-    marginBottom: 50
+    marginBottom: 40
     // minHeight: ICON_THUMB_1.height * 2.0,
     // maxHeight: ICON_THUMB_1.height * 2.0,
   },
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
   playbackTimestamp: {
     // textAlign: 'right',
     // alignSelf: 'stretch',
-    paddingRight: 8,
+    paddingRight: 15,
   },
   // image: {
   //   backgroundColor: BACKGROUND_COLOR,

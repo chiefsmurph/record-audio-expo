@@ -38,7 +38,7 @@ class ProfileScreen extends React.Component {
     // console.log(this.props.screenProps)
     return (
       <>
-        <Text style={{ fontSize: 28, margin: 5 }}>Public Feed</Text>
+        <Text style={{ fontSize: 28, marginHorizontal: 20, marginTop: 20, marginBottom: 10 }}>Public Feed</Text>
         {/* <View
           style={{
             marginVertical: 4,
@@ -57,7 +57,7 @@ class ProfileScreen extends React.Component {
         />
         {
           playingFile && (
-            <View style={{ paddingVertical: 10 }}>
+            <View style={{ paddingVertical: 15 }}>
               <Text style={{ paddingHorizontal: 10 }}>{playingFile}</Text>
               <LibraryPlayer playingFile={playingFile} key={playingFile + clickCount} />
             </View>
