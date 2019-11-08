@@ -4,7 +4,8 @@ import {
   Text,
   TouchableHighlight,
   Button,
-  View
+  View,
+  StyleSheet
 } from 'react-native';
 import { observer, inject } from 'mobx-react';
 import LibraryPlayer from '../components/LibraryPlayer';
@@ -28,9 +29,9 @@ class LibraryScreen extends React.Component {
   render() {
     console.log('welcome to library screen')
     const navigation = this.props.navigation;
-    console.log('render library', feed.length)
     const { playingFile, clickCount } = this.state;
     let { feed } = this.props.ApplicationState;
+    console.log('render library', feed)
     feed = feed.map(upload => ({
       ...upload,
       displayText: upload.user.username + ' - ' + upload.name
@@ -58,7 +59,16 @@ class LibraryScreen extends React.Component {
         {
           playingFile && (
             <View style={{ paddingVertical: 15 }}>
-              <Text style={{ paddingHorizontal: 10 }}>{playingFile.displayText}</Text>
+              <View style={styles.sideBySide}>
+                <View>
+                  <Text style={{ paddingHorizontal: 10 }}>{playingFile.user.username}</Text>
+                  <Text style={{ paddingHorizontal: 10 }}>{playingFile.user.age} / {playingFile.user.sex} / {playingFile.user.location}</Text>
+                </View>
+                <View>
+                  <Text style={{ paddingHorizontal: 10 }}>{playingFile.name}</Text>
+                </View>
+              </View>
+              {/* <Text style={{ paddingHorizontal: 10 }}>{playingFile.displayText}</Text> */}
               <LibraryPlayer playingFile={playingFile.fileName} key={playingFile + clickCount} />
             </View>
           )
@@ -67,4 +77,25 @@ class LibraryScreen extends React.Component {
     );
   }
 }
+
+
+const styles = StyleSheet.create({
+  // container: {
+  //   flex: 1,
+  //   paddingVertical: 10,
+  //   paddingHorizontal: 5,
+  // },
+  sideBySide: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // paddingVertical: 10,
+    paddingHorizontal: 5,
+
+    // borderWidth: 3,
+    // borderColor: 'black',
+    paddingBottom: 40
+  }
+});
+
 export default LibraryScreen;

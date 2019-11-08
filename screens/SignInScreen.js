@@ -44,10 +44,17 @@ class SignInScreen extends React.Component {
     this.setState({
       inProgress: true
     })
-    const { success, authToken } = await this._signIn({
+    const { 
+      success, 
+      authToken,
+      age,
+      location,
+      sex
+    } = await this._signIn({
       username,
       password
     });
+
     this.setState({
       inProgress: false
     });
@@ -55,7 +62,10 @@ class SignInScreen extends React.Component {
       this.props.ApplicationState.loggedIn = true;
       this.props.ApplicationState.user = {
         username,
-        authToken
+        authToken,
+        age,
+        location,
+        sex
       };
       Alert.alert(
         'SUCCESS',

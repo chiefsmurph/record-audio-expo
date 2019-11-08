@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, View, StyleSheet, Text, Alert, ActivityIndicator } from 'react-native';
+import { Button, View, StyleSheet, Text, Alert, ActivityIndicator, Picker } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { observer, inject } from 'mobx-react';
 
@@ -14,7 +14,10 @@ const Space = ({ children, margin = 8 }) => (
 class CreateAccountScreen extends React.Component {
   state = {
     username: '',
-    password: ''
+    password: '',
+    age: 13,
+    sex: '--',
+    location: ''
   };
   _fakeFetch = async ({ username, password }) => {
     console.log({ username, password })
@@ -23,13 +26,16 @@ class CreateAccountScreen extends React.Component {
     console.log({ passed })
     return passed;
   }
-  _createAccount = ({ username, password }) => {
+  _createAccount = ({ username, password, age, location, sex }) => {
     const { socket } = this.props.ApplicationState;
     return new Promise(resolve => {
       console.log(socket)
       socket.emit('client:create-account', {
         username,
-        password
+        password,
+        age,
+        location,
+        sex
       }, response => {
         console.log({
           response
@@ -38,15 +44,55 @@ class CreateAccountScreen extends React.Component {
       })
     });
   }
+  _validateInputs = () => {
+    const fieldLengthValidations = {
+      username: [4, 13],
+      password: [4, 13],
+      location: [2, 13],
+      sex: [1],
+      age: [2]
+    };
+    const values = this.state;
+    console.log(values);
+    const onlyAscii = /^[\x00-\x7F]+$/;
+    return Object.keys(fieldLengthValidations).map(field => {
+      const value = values[field];
+      const [min, max] = fieldLengthValidations[field];
+      if (value.length < min) {
+        return `${field} must be at least ${min} characters`;
+      } else if (value.length > max) {
+        return `${field} must be less than ${max} characters`;
+      } else if (!onlyAscii.test(value)) {
+        return `found weird characters in the ${field} input`;
+      }
+    }).filter(Boolean);
+  };
   _submit = async () => {
-    console.log(this.state.username, this.state.password);
-    const { username, password } = this.state;
+
     this.setState({
       inProgress: true
     })
-    const { success, authToken } = await this._createAccount({
+
+    const validationErrors = this._validateInputs();
+    if (validationErrors.length) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      this.setState({
+        inProgress: false
+      });
+      return Alert.alert(
+        'FAILURE',
+        validationErrors[0],
+      );
+    }
+
+    console.log(this.state.username, this.state.password);
+    const { username, password, age, location, sex } = this.state;
+    const { success, authToken, reason } = await this._createAccount({
       username,
-      password
+      password,
+      age,
+      location,
+      sex
     });
     this.setState({
       inProgress: false
@@ -55,11 +101,15 @@ class CreateAccountScreen extends React.Component {
       this.props.ApplicationState.loggedIn = true;
       this.props.ApplicationState.user = {
         username,
+        password,
+        age,
+        location,
+        sex,
         authToken
       };
       Alert.alert(
         'SUCCESS',
-        `Login successful!  Welcome, ${username}.`,
+        `Create account successful!  Welcome, ${username}.`,
         [
           { 
             text: 'OK', 
@@ -70,7 +120,7 @@ class CreateAccountScreen extends React.Component {
     } else {
       Alert.alert(
         'FAILURE',
-        'Login failed',
+        `Create account failed: ${reason}`,
       );
     }
   };
@@ -111,6 +161,52 @@ class CreateAccountScreen extends React.Component {
             onChangeText={password => this.setState({ password })}
           />
         </Space>
+
+        <Space>
+          <Text>Location</Text>
+          <TextInput 
+            style={{ height: 20, borderColor: 'gray', borderWidth: 1, paddingVertical: 5 }} 
+            textContentType={'username'}
+            autoCapitalize={'none'}
+            value={this.state.location}
+            onChangeText={location => this.setState({ location })}
+          />
+        </Space>
+
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ flex: 1 }}>
+            <Text>Sex</Text>
+            <Picker
+              selectedValue={this.state.sex}
+              style={{ height: 50, width: 100 }}
+              onValueChange={(itemValue, itemIndex) => this.setState({ sex: itemValue })}>
+              {
+                [
+                  '--',
+                  'M',
+                  'F',
+                  'Yes Plz'
+                ].map(val => (
+                  <Picker.Item label={val} value={val} />
+                ))
+              }
+            </Picker>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text>Age</Text>
+            <Picker
+              selectedValue={this.state.age}
+              style={{ height: 50, width: 100 }}
+              onValueChange={(itemValue, itemIndex) => this.setState({ age: itemValue })}>
+              {
+                Array(88).fill().map((v, i) => i + 13).map(num => (
+                  <Picker.Item label={num.toString()} value={num.toString()} />
+                ))
+              }
+            </Picker>
+          </View>
+        </View>
+        
         <Space>
           {
             this.state.inProgress
@@ -140,5 +236,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     paddingHorizontal: 5,
+  },
+  sideBySide: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+
+    borderWidth: 3,
+    borderColor: 'black'
   }
 });

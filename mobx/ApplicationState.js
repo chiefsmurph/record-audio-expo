@@ -32,6 +32,10 @@ class ApplicationStateStore {
           response
         });
         this.loggedIn = true;
+        this.user = {
+          ...this.user,
+          ...response
+        }
         resolve(response);
       })
     });
