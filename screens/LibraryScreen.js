@@ -39,7 +39,6 @@ class ProfileScreen extends React.Component {
       ...upload,
       displayText: upload.user.username + ' - ' + upload.name
     }));
-    console.log({recentUploads})
     return (
       <>
         <Text style={{ fontSize: 28, marginHorizontal: 20, marginTop: 20, marginBottom: 10 }}>Public Feed</Text>

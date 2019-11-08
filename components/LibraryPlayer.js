@@ -8,6 +8,8 @@ import {
   Dimensions
 } from 'react-native';
 import { Audio } from 'expo-av';
+import { endpoint } from '../config';
+console.log({ endpoint })
 
 var {height, width} = Dimensions.get('window');
 
@@ -57,7 +59,7 @@ class LibraryPlayer extends React.Component {
     this.sound.setOnPlaybackStatusUpdate(this._updateScreenForSoundStatus);
     try {
       await this.sound.loadAsync(
-        { uri: `http://89376b9f.ngrok.io/audio/${playingFile}` },
+        { uri: `${endpoint}/audio/${playingFile}` },
         { shouldPlay: true }
       );
       await this.sound.playAsync();

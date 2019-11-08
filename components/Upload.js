@@ -17,8 +17,7 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 import { observer, inject } from 'mobx-react';
 import Autocomplete from 'react-native-autocomplete-input';
 
-
-const ENDPOINT = 'http://89376b9f.ngrok.io/upload';
+import { endpoint } from '../config';
 
 
 
@@ -140,7 +139,7 @@ export default class Upload extends React.Component {
       }
     };
 
-    await fetch(ENDPOINT, options);
+    await fetch(`${endPoint}/upload`, options);
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     this.setState({
