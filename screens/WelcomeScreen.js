@@ -27,15 +27,15 @@ class WelcomeScreen extends React.Component {
       await this._preloadSuccessIcon();
       this.props.ApplicationState.hasInit = true;
     }
-    const { user: { username, authToken }} = this.props.ApplicationState;
+    const { authorize, user: { username, authToken }} = this.props.ApplicationState;
+    console.log(typeof authorize, 'username', username)
     if (username && authToken) {
       this.setState({
         loadingStatus: 'Logging you back in'
       })
-      const { success } = await this._authToken({
-        username,
-        authToken
-      });
+      const response = await authorize();
+      console.log({ response})
+      const { success } = response;
       await wait();
       if (success) {
         this.setState({
@@ -55,21 +55,21 @@ class WelcomeScreen extends React.Component {
       loadingStatus: null
     })
   }
-  _authToken = async ({ username, authToken }) => {
-    const { socket } = this.props.ApplicationState;
-    return new Promise(resolve => {
-      console.log(socket)
-      socket.emit('client:auth-token', {
-        username,
-        authToken
-      }, response => {
-        console.log({
-          response
-        });
-        resolve(response);
-      })
-    });
-  }
+  // _authToken = async ({ username, authToken }) => {
+  //   const { socket } = this.props.ApplicationState;
+  //   return new Promise(resolve => {
+  //     console.log(socket)
+  //     socket.emit('client:auth-token', {
+  //       username,
+  //       authToken
+  //     }, response => {
+  //       console.log({
+  //         response
+  //       });
+  //       resolve(response);
+  //     })
+  //   });
+  // }
   render() {
     console.log(this.props.navigation);
     const { loadingStatus, loginSuccess } = this.state;

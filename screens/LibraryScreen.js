@@ -11,22 +11,16 @@ import LibraryPlayer from '../components/LibraryPlayer';
 
 @inject('ApplicationState')
 @observer
-class ProfileScreen extends React.Component {
+class LibraryScreen extends React.Component {
   static navigationOptions = {
     title: 'Library',
   };
   state = {
     playingFile: null,
-    recentUploads: [],
     clickCount: 0
   }
   componentDidMount() {
-    const { socket } = this.props.ApplicationState;
-    socket.emit('client:request-recent-uploads');
-    socket.on('server:recent-uploads', recentUploads => {
-        this.setState({ recentUploads });
-        // console.log(JSON.stringify(recentUploads, null, 2));
-    });
+    const { socket, loggedIn } = this.props.ApplicationState;
   }
   componentWillUnmount() {
     // console.log('library unmounts')
@@ -34,8 +28,10 @@ class ProfileScreen extends React.Component {
   render() {
     console.log('welcome to library screen')
     const navigation = this.props.navigation;
-    let { playingFile, recentUploads, clickCount } = this.state;
-    recentUploads = recentUploads.map(upload => ({
+    console.log('render library', feed.length)
+    const { playingFile, clickCount } = this.state;
+    let { feed } = this.props.ApplicationState;
+    feed = feed.map(upload => ({
       ...upload,
       displayText: upload.user.username + ' - ' + upload.name
     }));
@@ -50,7 +46,7 @@ class ProfileScreen extends React.Component {
           }}
         /> */}
         <FlatList
-          data={recentUploads.slice(0, 50)}
+          data={feed.slice(0, 50)}
           renderItem={({ item }) => (
             <Button
               color={item.isPrivate ? 'orange' : 'blue'}
@@ -71,4 +67,4 @@ class ProfileScreen extends React.Component {
     );
   }
 }
-export default ProfileScreen;
+export default LibraryScreen;

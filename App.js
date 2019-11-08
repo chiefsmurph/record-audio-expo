@@ -7,7 +7,7 @@ import CreateAccountScreen from './screens/CreateAccountScreen';
 import SignInScreen from './screens/SignInScreen';
 // import initSocket from './utils/init-socket';
 
-import { StatusBar, View, Text, StyleSheet, SafeAreaView, Platform } from 'react-native';
+import { StatusBar, View, Text, StyleSheet, SafeAreaView, Platform, AppState } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -32,6 +32,16 @@ const styles = StyleSheet.create({
 
 @observer
 class App extends React.Component {
+  componentDidMount() {
+    AppState.addEventListener('change', async state => {
+      console.log('AppState changed to', state);
+      if (state === 'active') {
+        await ApplicationState.authorize();
+      } else if (state === 'background') {
+        ApplicationState.loggedIn = false;
+      }
+    })
+  }
   render() {
     const AppContainer = createAppContainer(MainSwitchNavigator);
     return (

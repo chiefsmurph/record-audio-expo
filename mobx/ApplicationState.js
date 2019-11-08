@@ -11,10 +11,30 @@ class ApplicationStateStore {
 
   @observable loggedIn = false;
 
+  @observable feed = [];
+
   @persist('object') @observable user = {
     username: null,
     authToken: null,
     // authToken: '983ce597f9f3460c'
+  }
+
+  @action.bound async authorize() {
+    const { socket, user: { username, authToken } } = this;
+    console.log({ username, authToken })
+    return new Promise(resolve => {
+      console.log(socket)
+      socket.emit('client:auth-token', {
+        username,
+        authToken
+      }, response => {
+        console.log({
+          response
+        });
+        this.loggedIn = true;
+        resolve(response);
+      })
+    });
   }
 
   // @observable list = [

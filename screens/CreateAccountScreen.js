@@ -52,6 +52,7 @@ class CreateAccountScreen extends React.Component {
       inProgress: false
     });
     if (success) {
+      this.props.ApplicationState.loggedIn = true;
       this.props.ApplicationState.user = {
         username,
         authToken
