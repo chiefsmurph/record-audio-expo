@@ -139,7 +139,7 @@ export default class Upload extends React.Component {
       }
     };
 
-    await fetch(`${endPoint}/upload`, options);
+    await fetch(`${endpoint}/upload`, options);
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     this.setState({
