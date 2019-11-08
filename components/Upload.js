@@ -20,14 +20,13 @@ import Autocomplete from 'react-native-autocomplete-input';
 import { endpoint } from '../config';
 
 
-
-class TypeNameModal extends React.Component {
+class SelectUserModal extends React.Component {
   state = {
-    text: '',
+    username: '',
     query: 'apple'
   }
   render() {
-    const { visible, setName, onCancel } = this.props;
+    const { visible, setUser, onCancel } = this.props;
     return (
       <Modal
         animationType="slide"
@@ -35,14 +34,15 @@ class TypeNameModal extends React.Component {
         visible={visible}
       >
         <View style={{ margin: 60, padding: 20 }}>
-          <Text style={{ fontSize: 20 }}>Type a name for your recording...</Text>
+          <Text style={{ fontSize: 20 }}>Type a username to send your message to...</Text>
           <TextInput
+            autoCapitalize={'none'}
             style={{ height: 40, borderColor: 'gray', borderWidth: 1, padding: 5 }}
-            onChangeText={text => this.setState({ text })}
-            value={this.state.text}
+            onChangeText={username => this.setState({ username })}
+            value={this.state.username}
             autoFocus={true}
           />
-          <Text>Public recording?</Text>
+          {/* <Text>Public recording?</Text>
           <Switch
             onValueChange={() => {}}
             value={true}
@@ -59,11 +59,78 @@ class TypeNameModal extends React.Component {
                 <Text>{item}</Text>
               </TouchableOpacity>
             )}
+          /> */}
+              
+          <Button
+            title={'Send Private Message'}
+            onPress={() => setUser(this.state.username)}
+          />
+          
+          <Button
+            style={{ marginTop: 20 }}
+            color={'red'}
+            title={'Go Back'}
+            onPress={onCancel}  
+          />
+        </View>
+      </Modal>
+    );
+  }
+};
+
+
+class TypeNameModal extends React.Component {
+  state = {
+    name: '',
+    query: 'apple',
+    isPrivate: false
+  }
+  render() {
+    const { visible, onSend, onCancel } = this.props;
+    const { isPrivate } = this.state;
+    const buttonText = `Send ${isPrivate ? 'private' : 'public'} message`;
+    return (
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={visible}
+      >
+        <View style={{ margin: 60, padding: 20 }}>
+          <Text style={{ fontSize: 20 }}>Type a name for your recording...</Text>
+          <TextInput
+            autoCapitalize={'none'}
+            style={{ height: 40, borderColor: 'gray', borderWidth: 1, padding: 5 }}
+            onChangeText={name => this.setState({ name })}
+            value={this.state.name}
+            autoFocus={true}
+          />
+
+          <View style={styles.horizontal}>
+            <Text>Private recording?</Text>
+            <Switch
+              onValueChange={isPrivate => this.setState({ isPrivate })}
+              value={this.state.isPrivate}
+              trackColor={'orange'}
+            />
+          </View>
+
+          <Autocomplete
+            data={['apple', 'pie', 'couch']}
+            // defaultValue={'apple'}
+            onChangeText={text => this.setState({ query: text })}
+            renderItem={({ item, i }) => (
+              <TouchableOpacity onPress={() => this.setState({ query: item })}>
+                <Text>{item}</Text>
+              </TouchableOpacity>
+            )}
           />
               
           <Button
-            title={'Complete Upload'}
-            onPress={() => setName(this.state.text)}
+            title={buttonText}
+            onPress={() => onSend({
+              name: this.state.name,
+              isPrivate: this.state.isPrivate
+            })}
           />
           
           <Button
@@ -82,53 +149,80 @@ class TypeNameModal extends React.Component {
 @observer
 export default class Upload extends React.Component {
   state = {
-    showingModal: false,
+    showingTypeNameModal: false,
+    showingSelectUserModal: false,
     name: undefined,
-    uploading: false
+    isPrivate: false,
+    uploading: false,
+    recipientUser: null
   }
-  _onSetName = async name => {
+  _onSend = () => {
+    const { recipientUser, isPrivate } = this.state;
+    if (!isPrivate || recipientUser) {
+      this._beginUpload();
+    } else {
+      this.setState({
+        showingSelectUserModal: true
+      });
+    }
+  };
+  _beginUpload = () => {
     Keyboard.dismiss();
 
     setTimeout(() => {
       this.props.setUploading(true)
     
       this.setState({
-        name,
         uploading: true,
-        showingModal: false
+        showingTypeNameModal: false,
+        showingSelectUserModal: false
       }, this._uploadFile);
     }, 200);
-    
-  }
+  };
+  _onSetUser = async username => {
+    this.setState({ recipientUser: username }, this._onSend);
+    console.log({ username}, 'set');
+  };
 
   _uploadClick = () => {
     this.setState({
-      showingModal: true
+      showingTypeNameModal: true
     });
   }
     
 
   _uploadFile = async () => {
-    const { uri } = this.props;
+    const { uri, onSuccess } = this.props;
     console.log('uploading', uri);
     // extract the filetype
     let fileType = uri.substring(uri.lastIndexOf(".") + 1);
     // let fileName = uri.substring(uri.lastIndexOf("/") + 1);
 
+
+    const {
+      name,
+      isPrivate,
+      recipientUser
+    } = this.state;
+
     let formData = new FormData();
+    
 
     const { username, authToken } = this.props.ApplicationState.user;
-    const name = `${username} - ${this.state.name}.${fileType}`
+    const audioName = `${username} - ${name}.${fileType}`
     formData.append("audioFile", {
       uri,
-      name,
+      name: audioName,
       type: `audio/${fileType}`
     });
 
-    formData.append("name", this.state.name);
+
+    formData.append("name", name);
     formData.append("fileType", fileType);
     formData.append("username", username);
     formData.append("authToken", authToken);
+    formData.append("isPrivate", isPrivate);
+    formData.append("recipientUser", recipientUser);
 
     let options = {
       method: "POST",
@@ -145,7 +239,7 @@ export default class Upload extends React.Component {
     this.setState({
       uploading: false
     })
-    this.props.onSuccess();
+    onSuccess();
     Alert.alert(
       'SUCCESS',
       'Audio uploaded successfully!',
@@ -162,7 +256,7 @@ export default class Upload extends React.Component {
   };
   render() {
     const { uri } = this.props;
-    const { showingModal, uploading } = this.state;
+    const { showingTypeNameModal, showingSelectUserModal, uploading } = this.state;
     return (
       <View style={styles.container}>
         {
@@ -194,11 +288,23 @@ export default class Upload extends React.Component {
           )
         }
         <TypeNameModal 
-          visible={showingModal}
-          setName={this._onSetName} 
+          visible={showingTypeNameModal}
+          onSend={({ name, isPrivate }) => {
+            this.setState({
+              name,
+              isPrivate
+            }, this._onSend)
+          }}
           onCancel={() => {
             Keyboard.dismiss();
-            setTimeout(() => this.setState({ showingModal: false }), 200);
+            setTimeout(() => this.setState({ showingTypeNameModal: false }), 200);
+          }} />
+        <SelectUserModal 
+          visible={showingSelectUserModal}
+          setUser={this._onSetUser} 
+          onCancel={() => {
+            Keyboard.dismiss();
+            setTimeout(() => this.setState({ showingSelectUserModal: false }), 200);
           }} />
       </View>
     )
@@ -226,5 +332,14 @@ const styles = StyleSheet.create({
     // backgroundColor: BACKGROUND_COLOR,
     // minHeight: DEVICE_HEIGHT,
     // maxHeight: DEVICE_HEIGHT,
+  },
+
+  horizontal: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    minHeight: 70
   }
 });

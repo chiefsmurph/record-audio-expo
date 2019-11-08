@@ -53,6 +53,7 @@ class ProfileScreen extends React.Component {
           data={recentUploads.slice(0, 50)}
           renderItem={({ item }) => (
             <Button
+              color={item.isPrivate ? 'orange' : 'blue'}
               title={item.displayText}
               onPress={() => this.setState({ playingFile: item, clickCount: clickCount + 1 })}
               />
