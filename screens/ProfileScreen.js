@@ -1,55 +1,25 @@
 import React from 'react';
-import { Button, View, StyleSheet, Text, Alert, ActivityIndicator, AsyncStorage } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import { observer, inject } from 'mobx-react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import Profile from '../components/Profile';
 
-const Space = ({ children, margin = 8 }) => (
-  <View style={{ marginVertical: margin }}>
-    {children}
-  </View>
-);
 
-@inject('ApplicationState')
-@observer
-class SignInScreen extends React.Component {
-  state = {
-    username: '',
-    password: ''
-  };
-  _logout = async () => {
-    await AsyncStorage.clear();
-    this.props.ApplicationState.user = {};
-    this.props.navigation.navigate('Welcome');
+export default class ProfileScreen extends React.Component {
+  state = { keyCount: 0 };
+  componentDidMount() {
+    this.subs = [
+      this.props.navigation.addListener('didFocus', this.componentDidFocus),
+      // this.props.navigation.addListener('willBlur', this.componentWillBlur),
+    ];
   }
+  componentDidFocus = () => {
+    console.log("focus");
+    this.setState(({ keyCount }) => ({ keyCount: keyCount + 1 }));
+  }
+  componentWillUnmount() {
+    this.subs.forEach(sub => sub.remove());
+  }
+
   render() {
-    const { user } = this.props.ApplicationState;
-    return (
-      <View style={styles.container}>
-        <Text style={{ fontSize: 20 }}>{JSON.stringify(user, null, 2)}</Text>
-        <View
-          style={{
-            marginTop: 4,
-            borderBottomColor: 'black',
-            borderBottomWidth: 1,
-          }}
-        />
-        <TouchableOpacity onPress={this._logout} hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
-          <Text>Click here to log out</Text>
-        </TouchableOpacity>
-      </View>
-    )
+    const { keyCount } = this.state;
+    return keyCount ? <Profile key={this.state.keyCount} /> : null;
   }
 }
-
-export default SignInScreen;
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'column',
-    alignItems: 'center',
-  }
-});

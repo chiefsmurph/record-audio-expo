@@ -18,7 +18,7 @@ class LibraryScreen extends React.Component {
   };
   state = {
     playingFile: null,
-    clickCount: 0
+    clickCount: 0,
   }
   componentDidMount() {
     const { socket, loggedIn } = this.props.ApplicationState;
