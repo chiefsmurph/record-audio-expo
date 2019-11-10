@@ -15,6 +15,7 @@ const Space = ({ children, margin = 8 }) => (
 @observer
 class Profile extends React.Component {
   state = {
+    isSelf: false,
     profileData: null,
     playingFile: null,
     clickCount: 0
@@ -25,16 +26,23 @@ class Profile extends React.Component {
     this.props.navigation.navigate('Welcome');
   };
   componentDidMount() {
-    const userToLookup = this.props.username || this.props.ApplicationState.user.username;
+    const curUser = this.props.ApplicationState.user.username;
+    const userToLookup = this.props.username || curUser
     console.log({ userToLookup })
     this.props.ApplicationState.socket.emit(
       'client:request-profile', 
       userToLookup,
-      profileData => this.setState({ profileData })
+      profileData => {
+        console.log(` received ${profileData.user.username} you are ${curUser}`)
+        this.setState({ 
+          profileData,
+          isSelf: profileData.user.username === curUser
+        })
+      }
     );
   }
   render() {
-    const { playingFile, profileData, clickCount } = this.state;
+    const { playingFile, profileData, clickCount, isSelf } = this.state;
     if (!profileData) {
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -99,12 +107,16 @@ class Profile extends React.Component {
             </View>
           )
         }
-
-        <Space>
-          <TouchableOpacity onPress={this._logout} hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
-            <Text>Click here to log out</Text>
-          </TouchableOpacity>
-        </Space>
+        {
+          isSelf && (
+            <Space>
+              <TouchableOpacity onPress={this._logout} hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
+                <Text>Click here to log out</Text>
+              </TouchableOpacity>
+            </Space>
+          )
+        }
+        
         
       </View>
     )

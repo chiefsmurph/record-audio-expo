@@ -3,12 +3,35 @@ import {
   FlatList,
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   Button,
   View,
-  StyleSheet
+  StyleSheet,
+  Modal
 } from 'react-native';
 import { observer, inject } from 'mobx-react';
 import LibraryPlayer from '../components/LibraryPlayer';
+import Profile from '../components/Profile';
+
+class ProfileModal extends React.Component {
+  render() {
+    const { username, onClose } = this.props;
+    console.log('profile', {
+      username
+    })
+    return (
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={!!username}
+      >
+        <Button title={'Close Profile'} onPress={onClose} />
+        <Profile username={username}/>
+      </Modal>
+    );
+  }
+}
+
 
 @inject('ApplicationState')
 @observer
@@ -19,6 +42,7 @@ class LibraryScreen extends React.Component {
   state = {
     playingFile: null,
     clickCount: 0,
+    showingProfile: null
   }
   componentDidMount() {
     const { socket, loggedIn } = this.props.ApplicationState;
@@ -29,16 +53,16 @@ class LibraryScreen extends React.Component {
   render() {
     console.log('welcome to library screen')
     const navigation = this.props.navigation;
-    const { playingFile, clickCount } = this.state;
+    const { playingFile, clickCount, showingProfile } = this.state;
     let { feed } = this.props.ApplicationState;
-    console.log('render library', feed)
+    // console.log('render library', feed)
     feed = feed.map(upload => ({
       ...upload,
       displayText: upload.user.username + ' - ' + upload.name
     }));
     return (
       <>
-        <Text style={{ fontSize: 28, marginHorizontal: 20, marginTop: 20, marginBottom: 10 }}>Public Feed</Text>
+        <Text style={{ fontSize: 28, marginHorizontal: 20, marginTop: 20, marginBottom: 10 }}>Public Feed {showingProfile}</Text>
         {/* <View
           style={{
             marginVertical: 4,
@@ -53,7 +77,7 @@ class LibraryScreen extends React.Component {
               color={item.isPrivate ? 'orange' : 'blue'}
               title={item.displayText}
               onPress={() => this.setState({ playingFile: item, clickCount: clickCount + 1 })}
-              />
+            />
           )}
         />
         {
@@ -61,8 +85,24 @@ class LibraryScreen extends React.Component {
             <View style={{ paddingVertical: 15 }}>
               <View style={styles.sideBySide}>
                 <View>
-                  <Text style={{ paddingHorizontal: 10 }}>{playingFile.user.username}</Text>
-                  <Text style={{ paddingHorizontal: 10 }}>{playingFile.user.age} / {playingFile.user.sex} / {playingFile.user.location}</Text>
+                  {/* <Button title={playingFile.user.username} onPress={() => {
+                      console.log('btn')
+                      this.setState({ showingProfile: playingFile.user.username })
+                    }} /> */}
+                  <TouchableHighlight 
+                    style={[styles.bordered, { height: 50 }]}
+                    title={playingFile.user.username}
+                    onPress={() => {
+                      console.log('pressed')
+                      this.setState({ showingProfile: playingFile.user.username })
+                    }}
+                  >
+                    {/* <Text style={{ paddingHorizontal: 10 }}>{playingFile.user.username}</Text> */}
+                    <View>
+                      <Text style={{ paddingHorizontal: 10 }}>{playingFile.user.username}</Text>
+                      <Text style={{ paddingHorizontal: 10 }}>{playingFile.user.age} / {playingFile.user.sex} / {playingFile.user.location}</Text>
+                    </View>
+                  </TouchableHighlight>
                 </View>
                 <View>
                   <Text style={{ paddingHorizontal: 10 }}>{playingFile.name}</Text>
@@ -73,6 +113,7 @@ class LibraryScreen extends React.Component {
             </View>
           )
         }
+        <ProfileModal username={showingProfile} onClose={() => this.setState({ showingProfile: null })} />
       </>
     );
   }
@@ -92,9 +133,12 @@ const styles = StyleSheet.create({
     // paddingVertical: 10,
     paddingHorizontal: 5,
 
-    // borderWidth: 3,
-    // borderColor: 'black',
     paddingBottom: 40
+  },
+  bordered: {
+
+    borderWidth: 3,
+    borderColor: 'black',
   }
 });
 
