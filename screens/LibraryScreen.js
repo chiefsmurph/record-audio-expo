@@ -90,7 +90,7 @@ class LibraryScreen extends React.Component {
                       this.setState({ showingProfile: playingFile.user.username })
                     }} /> */}
                   <TouchableHighlight 
-                    style={[styles.bordered, { height: 50 }]}
+                    style={[{ height: 48 }]}
                     title={playingFile.user.username}
                     onPress={() => {
                       console.log('pressed')
