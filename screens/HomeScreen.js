@@ -1,4 +1,5 @@
 import React from 'react';
+import { version } from '../config';
 import { Button, View, StyleSheet, Text } from 'react-native';
 import Record from '../components/Record';
 import Upload from '../components/Upload';
@@ -14,6 +15,7 @@ class HomeScreen extends React.Component {
     const { audioFile, recordKey, uploading } = this.state;
     return (
       <View style={styles.homeContainer}>
+        <Text>Version: {version}</Text>
         { !uploading && (
           <Record 
             onSetAudioFile={audioFile => this.setState({ audioFile })} 
