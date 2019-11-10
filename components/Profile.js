@@ -11,6 +11,17 @@ const Space = ({ children, margin = 8 }) => (
   </View>
 );
 
+function formatDate(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear() + "  " + strTime;
+}
+
 @inject('ApplicationState')
 @observer
 class Profile extends React.Component {
@@ -33,6 +44,7 @@ class Profile extends React.Component {
       'client:request-profile', 
       userToLookup,
       profileData => {
+        console.log({profileData})
         console.log(` received ${profileData.user.username} you are ${curUser}`)
         this.setState({ 
           profileData,
@@ -92,7 +104,7 @@ class Profile extends React.Component {
 
         {
           playingFile && (
-            <View style={{ paddingVertical: 15 }}>
+            <View style={{ paddingVertical: 20 }}>
               <View style={styles.sideBySide}>
                 {/* <View> */}
                   {/* <Text style={{ paddingHorizontal: 10 }}>{playingFile.user.username}</Text> */}
@@ -100,6 +112,7 @@ class Profile extends React.Component {
                 {/* </View> */}
                 {/* <View> */}
                   <Text style={{ paddingHorizontal: 10 }}>{playingFile.name}</Text>
+                  <Text style={{ paddingHorizontal: 10 }}>{formatDate(new Date(playingFile.timestamp))}</Text>
                 {/* </View> */}
               </View>
               {/* <Text style={{ paddingHorizontal: 10 }}>{playingFile.displayText}</Text> */}

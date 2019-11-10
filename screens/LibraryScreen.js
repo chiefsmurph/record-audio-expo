@@ -13,6 +13,18 @@ import { observer, inject } from 'mobx-react';
 import LibraryPlayer from '../components/LibraryPlayer';
 import Profile from '../components/Profile';
 
+
+function formatDate(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear() + "  " + strTime;
+}
+
 class ProfileModal extends React.Component {
   render() {
     const { username, onClose } = this.props;
@@ -106,6 +118,7 @@ class LibraryScreen extends React.Component {
                 </View>
                 <View>
                   <Text style={{ paddingHorizontal: 10 }}>{playingFile.name}</Text>
+                  <Text style={{ paddingHorizontal: 10 }}>{formatDate(new Date(playingFile.timestamp))}</Text>
                 </View>
               </View>
               {/* <Text style={{ paddingHorizontal: 10 }}>{playingFile.displayText}</Text> */}
