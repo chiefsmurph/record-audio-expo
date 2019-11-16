@@ -32,7 +32,7 @@ class HomeScreen extends React.Component {
                 recordKey: recordKey + 1,
                 uploading: false
               }));
-              navigate('Library')
+              navigate('Public')
             }}
             key={recordKey} 
           />

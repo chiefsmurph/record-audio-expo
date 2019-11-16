@@ -1,7 +1,8 @@
 import React from 'react';
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
-import LibraryScreen from './screens/LibraryScreen';
+import PublicScreen from './screens/PublicScreen';
+import PrivateScreen from './screens/PrivateScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import CreateAccountScreen from './screens/CreateAccountScreen';
 import SignInScreen from './screens/SignInScreen';
@@ -86,13 +87,24 @@ const AppStack = createMaterialBottomTabNavigator({
       ),
     }
   },
-  Library: {
-    screen: LibraryScreen,
-    navigationOptions: {  
-      tabBarLabel: 'Library',
+  Public: {
+    screen: PublicScreen,
+    navigationOptions: {
+      tabBarLabel: 'Public',
       tabBarIcon: ({ tintColor }) => (
         <View>
           <Icon style={[{color: tintColor}]} size={25} name={'md-list'}/>  
+        </View>
+      ),
+    }
+  },
+  Private: {
+    screen: PrivateScreen,
+    navigationOptions: {  
+      tabBarLabel: 'Private',
+      tabBarIcon: ({ tintColor }) => (
+        <View>
+          <Material style={[{color: tintColor}]} size={25} name={'message-outline'}/>  
         </View>
       ),
     }

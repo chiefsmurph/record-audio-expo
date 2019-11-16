@@ -47,10 +47,10 @@ class ProfileModal extends React.Component {
 
 @inject('ApplicationState')
 @observer
-class LibraryScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Library',
-  };
+class PublicScreen extends React.Component {
+  // static navigationOptions = {
+  //   title: 'Library',
+  // };
   state = {
     playingFile: null,
     clickCount: 0,
@@ -66,15 +66,15 @@ class LibraryScreen extends React.Component {
     console.log('welcome to library screen')
     const navigation = this.props.navigation;
     const { playingFile, clickCount, showingProfile } = this.state;
-    let { feed } = this.props.ApplicationState;
+    let { feed: { private: privateFeed } } = this.props.ApplicationState;
     // console.log('render library', feed)
-    feed = feed.map(upload => ({
+    privateFeed = privateFeed.map(upload => ({
       ...upload,
       displayText: upload.user.username + ' - ' + upload.name
     }));
     return (
       <>
-        <Text style={{ fontSize: 28, marginHorizontal: 20, marginTop: 20, marginBottom: 10 }}>Public Feed {showingProfile}</Text>
+        <Text style={{ fontSize: 28, marginHorizontal: 20, marginTop: 20, marginBottom: 10 }}>Private Messages {showingProfile}</Text>
         {/* <View
           style={{
             marginVertical: 4,
@@ -83,7 +83,7 @@ class LibraryScreen extends React.Component {
           }}
         /> */}
         <FlatList
-          data={feed.slice(0, 50)}
+          data={privateFeed.slice(0, 50)}
           renderItem={({ item }) => (
             <Button
               color={item.isPrivate ? 'orange' : 'blue'}
@@ -155,4 +155,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default LibraryScreen;
+export default PublicScreen;

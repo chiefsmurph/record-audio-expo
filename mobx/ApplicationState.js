@@ -11,7 +11,7 @@ class ApplicationStateStore {
 
   @observable loggedIn = false;
 
-  @observable feed = [];
+  @observable feed = {};
 
   @persist('object') @observable user = {
     username: null,

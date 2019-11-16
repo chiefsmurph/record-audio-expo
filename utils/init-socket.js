@@ -4,8 +4,7 @@ import ApplicationState from '../mobx/ApplicationState';
 
 export default () => {
   const socket = io(endpoint);
-  socket.on('server:recent-uploads', feed => {
-    console.log({ feed })
+  socket.on('server:feed', feed => {
     ApplicationState.feed = feed;
   });
   return socket;
