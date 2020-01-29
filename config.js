@@ -1,5 +1,5 @@
 module.exports = {
-  version: '0.45',
-  endpoint: 'http://107.173.6.167:500',
+  version: '0.46',
+  endpoint: 'http://23.237.87.144:3008',
   // endpoint: 'http://addca22e.ngrok.io'
 };
