@@ -43,7 +43,7 @@ class WelcomeScreen extends React.Component {
           loadingStatus: `Welcome back, ${username}`
         });
         await wait();
-        this.props.navigation.navigate('App')
+        this.props.navigation.navigate('App');
       } else {
         Alert.alert(
           'FAILURE',

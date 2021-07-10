@@ -41,56 +41,56 @@ const recordingSettings = {
     linearPCMIsBigEndian: false,
     linearPCMIsFloat: false,
   },
-  web: (() => {
-    const mimes = [
-      {
-        mimeType: 'audio/mp4;codecs="mp4a.40.5"', // MPEG-4 HE-AAC v1
-        audioBitsPerSecond: 64000,
-        bitsPerSecond: 64000,
-        extension: '.m4a',
-      },
-      {
-        mimeType: 'audio/mp4;codecs="mp4a.40.2"', // MPEG-4 AAC LC
-        audioBitsPerSecond: 64000,
-        bitsPerSecond: 64000,
-        extension: '.m4a',
-      },
-      {
-        mimeType: 'audio/webm;codecs="opus"',
-        audioBitsPerSecond: 64000,
-        bitsPerSecond: 64000,
-        extension: '.webm',
-      },
-      {
-        mimeType: 'audio/webm;codecs="vp8"',
-        audioBitsPerSecond: 64000,
-        bitsPerSecond: 64000,
-        extension: '.webm',
-      },
-      {
-        mimeType: 'audio/webm',
-        audioBitsPerSecond: 64000,
-        bitsPerSecond: 64000,
-        extension: '.webm',
-      },
-      {
-        mimeType: 'audio/mpeg', // Support depends on polyfill
-        audioBitsPerSecond: 128000,
-        bitsPerSecond: 128000,
-        extension: '.mp3',
-      },
-    ]
+  // web: (() => {
+  //   const mimes = [
+  //     {
+  //       mimeType: 'audio/mp4;codecs="mp4a.40.5"', // MPEG-4 HE-AAC v1
+  //       audioBitsPerSecond: 64000,
+  //       bitsPerSecond: 64000,
+  //       extension: '.m4a',
+  //     },
+  //     {
+  //       mimeType: 'audio/mp4;codecs="mp4a.40.2"', // MPEG-4 AAC LC
+  //       audioBitsPerSecond: 64000,
+  //       bitsPerSecond: 64000,
+  //       extension: '.m4a',
+  //     },
+  //     {
+  //       mimeType: 'audio/webm;codecs="opus"',
+  //       audioBitsPerSecond: 64000,
+  //       bitsPerSecond: 64000,
+  //       extension: '.webm',
+  //     },
+  //     {
+  //       mimeType: 'audio/webm;codecs="vp8"',
+  //       audioBitsPerSecond: 64000,
+  //       bitsPerSecond: 64000,
+  //       extension: '.webm',
+  //     },
+  //     {
+  //       mimeType: 'audio/webm',
+  //       audioBitsPerSecond: 64000,
+  //       bitsPerSecond: 64000,
+  //       extension: '.webm',
+  //     },
+  //     {
+  //       mimeType: 'audio/mpeg', // Support depends on polyfill
+  //       audioBitsPerSecond: 128000,
+  //       bitsPerSecond: 128000,
+  //       extension: '.mp3',
+  //     },
+  //   ]
 
-    for (let index = 0; index < mimes.length; index++) {
-      const mime = mimes[index]
+  //   for (let index = 0; index < mimes.length; index++) {
+  //     const mime = mimes[index]
 
-      if (window.MediaRecorder.isTypeSupported(mime.mimeType)) {
-        return mime
-      }
-    }
+  //     if (window.MediaRecorder.isTypeSupported(mime.mimeType)) {
+  //       return mime
+  //     }
+  //   }
 
-    return false;
-  })(),
+  //   return false;
+  // })(),
 };
 
 export default class Record extends React.Component {
