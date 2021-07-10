@@ -100,7 +100,7 @@ class WelcomeScreen extends React.Component {
     }
     return (
       <View style={styles.container}>
-        <Text style={{ fontSize: 28 }}>Welcome to record-audio-expo</Text>
+        <Text style={{ fontSize: 28 }}>Welcome to AudioSquare</Text>
         <Button title={'Sign In'} onPress={() => this.props.navigation.navigate('SignIn')} />
         <Button title={'Create Account'} onPress={() => this.props.navigation.navigate('CreateAccount')} />
       </View>
