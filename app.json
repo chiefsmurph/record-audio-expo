@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "AudioSquare",
-    "slug": "audio-square",
+    "slug": "audio_square",
     "privacy": "public",
     "platforms": [
       "ios",
@@ -24,14 +24,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.johnmurphydevelopment.audio-square"
+      "bundleIdentifier": "com.johnmurphydevelopment.audio_square"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#A5F898"
       },
-      "package": "com.johnmurphydevelopment.audio-square"
+      "package": "com.johnmurphydevelopment.audio_square"
     },
     "description": "Recording audio and sharing it with others in real-time"
   }
